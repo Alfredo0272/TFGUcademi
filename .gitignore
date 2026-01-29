@@ -1,0 +1,17 @@
+# Java / Spring Boot
+target/
+*.class
+*.log
+
+# Eclipse
+.project
+.classpath
+.settings/
+.metadata/
+
+# Environment
+.env
+
+# OS
+.DS_Store
+Thumbs.db
