@@ -31,7 +31,71 @@ public class Stock {
     @Column(nullable = false)
     private Double availableL;
 
-    private LocalDateTime updatedAt = LocalDateTime.now();
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
 
     public Stock() {}
+
+    @PrePersist
+    @PreUpdate
+    public void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Factory getFactory() {
+		return factory;
+	}
+
+	public void setFactory(Factory factory) {
+		this.factory = factory;
+	}
+
+	public Beer getBeer() {
+		return beer;
+	}
+
+	public void setBeer(Beer beer) {
+		this.beer = beer;
+	}
+
+	public Double getProductionCostL() {
+		return productionCostL;
+	}
+
+	public void setProductionCostL(Double productionCostL) {
+		this.productionCostL = productionCostL;
+	}
+
+	public Double getProductionVolumeL() {
+		return productionVolumeL;
+	}
+
+	public void setProductionVolumeL(Double productionVolumeL) {
+		this.productionVolumeL = productionVolumeL;
+	}
+
+	public Double getAvailableL() {
+		return availableL;
+	}
+
+	public void setAvailableL(Double availableL) {
+		this.availableL = availableL;
+	}
+
+	public LocalDateTime getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(LocalDateTime updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
 }

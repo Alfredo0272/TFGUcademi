@@ -1,7 +1,8 @@
 package tfg.cervecera.model;
 
-import jakarta.persistence.*;
 import java.util.List;
+import jakarta.persistence.*;
+import tfg.cervecera.model.company.Company;
 
 @Entity
 @Table(name = "factories")
@@ -11,9 +12,7 @@ public class Factory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
-
     private String location;
 
     @ManyToOne
@@ -21,7 +20,45 @@ public class Factory {
     private Company company;
 
     @OneToMany(mappedBy = "factory")
-    private List<Stock> stocks;
+    private List<Beer> beers;
 
-    public Factory() {}
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
+	}
+
+	public List<Beer> getBeers() {
+		return beers;
+	}
+
+	public void setBeers(List<Beer> beers) {
+		this.beers = beers;
+	}
 }
