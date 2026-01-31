@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @SpringBootApplication
-public class CerveceraApplication {
+public class Application {
 
     public static void main(String[] args) {
 
@@ -21,7 +21,7 @@ public class CerveceraApplication {
         props.put("MYSQL_USER", dotenv.get("MYSQL_USER"));
         props.put("MYSQL_PASSWORD", dotenv.get("MYSQL_PASSWORD"));
 
-        new SpringApplicationBuilder(CerveceraApplication.class)
+        new SpringApplicationBuilder(Application.class)
                 .properties(props)
                 .run(args);
     }
