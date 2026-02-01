@@ -1,10 +1,12 @@
 package tfg.cervecera.aplication.company;
 
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import tfg.cervecera.model.company.Company;
+import tfg.cervecera.exceptions.EmailAlreadyExistsException;
+import tfg.cervecera.model.Company;
 import tfg.cervecera.model.company.CompanyRepository;
+
 
 @Service
 public class CompanyRegisterService {
@@ -21,9 +23,7 @@ public class CompanyRegisterService {
     public Company registerCompany(Company company) {
 
         if (companyRepository.existsByEmail(company.getEmail())) {
-            throw new IllegalArgumentException(
-                "Company with email " + company.getEmail() + " already exists."
-            );
+            throw new EmailAlreadyExistsException("El email ya está registrado");
         }
 
         company.setPasswordHash(

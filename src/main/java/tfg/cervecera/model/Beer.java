@@ -1,7 +1,6 @@
 package tfg.cervecera.model;
 
 import jakarta.persistence.*;
-import tfg.cervecera.model.company.Company;
 
 @Entity
 @Table(name = "beers")
