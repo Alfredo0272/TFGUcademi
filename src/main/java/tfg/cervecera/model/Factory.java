@@ -2,7 +2,6 @@ package tfg.cervecera.model;
 
 import java.util.List;
 import jakarta.persistence.*;
-import tfg.cervecera.model.company.Company;
 
 @Entity
 @Table(name = "factories")

@@ -2,7 +2,8 @@ package tfg.cervecera.aplication.company;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import tfg.cervecera.model.company.Company;
+import tfg.cervecera.exceptions.InvalidCredentialsException;
+import tfg.cervecera.model.Company;
 import tfg.cervecera.model.company.CompanyRepository;
 
 @Service
@@ -25,9 +26,8 @@ public class CompanyLoginService {
             );
 
         if (!passwordEncoder.matches(rawPassword, company.getPasswordHash())) {
-            throw new IllegalArgumentException("Invalid email or password");
+            throw new InvalidCredentialsException();
         }
-
         return company;
     }
 }

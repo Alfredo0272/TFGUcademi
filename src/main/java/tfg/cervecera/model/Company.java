@@ -1,11 +1,9 @@
-package tfg.cervecera.model.company;
+package tfg.cervecera.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.*;
-import tfg.cervecera.model.Beer;
-import tfg.cervecera.model.Factory;
 
 @Entity
 @Table(name = "companies")
