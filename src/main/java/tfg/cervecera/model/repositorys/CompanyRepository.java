@@ -1,4 +1,4 @@
-package tfg.cervecera.model.company;
+package tfg.cervecera.model.repositorys;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -9,8 +9,6 @@ import tfg.cervecera.aplication.company.CompanyLoginService;
 import tfg.cervecera.aplication.company.CompanyRegisterService;
 import tfg.cervecera.dto.company.CompanyLoginDTO;
 import tfg.cervecera.dto.company.CompanyRegisterDTO;
-import tfg.cervecera.model.Company;
-
 
 @RestController
 @RequestMapping("/api/companies")
@@ -26,17 +24,10 @@ public class CompanyController {
     }
     
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@Valid @RequestBody CompanyRegisterDTO dto) {
+    public ResponseEntity<Void> register(
+            @Valid @RequestBody CompanyRegisterDTO dto) {
 
-        Company company = new Company();
-        company.setName(dto.getName());
-        company.setEmail(dto.getEmail().toLowerCase());
-        company.setPasswordHash(dto.getPassword());
-        company.setCountry(dto.getCountry());
-        company.setFoundedYear(dto.getFoundedYear());
-
-        registerService.registerCompany(company);
-
+        registerService.registerCompany(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     
