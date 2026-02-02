@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import tfg.cervecera.aplication.company.CompanyLoginService;
 import tfg.cervecera.aplication.company.CompanyRegisterService;
 import tfg.cervecera.dto.company.CompanyLoginDTO;
+import tfg.cervecera.dto.company.CompanyLoginResponseDTO;
 import tfg.cervecera.dto.company.CompanyRegisterDTO;
 
 @RestController
@@ -32,9 +33,13 @@ public class CompanyController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody CompanyLoginDTO dto) {
-        loginService.login(dto.getEmail(), dto.getPassword());
-        return ResponseEntity.ok("Login correcto");
+    public ResponseEntity<CompanyLoginResponseDTO> login(
+            @Valid @RequestBody CompanyLoginDTO dto) {
+
+        CompanyLoginResponseDTO response =
+                loginService.login(dto.getEmail(), dto.getPassword());
+
+        return ResponseEntity.ok(response);
     }
 }
     
