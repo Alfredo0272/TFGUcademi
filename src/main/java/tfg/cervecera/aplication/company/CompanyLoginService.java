@@ -2,9 +2,10 @@ package tfg.cervecera.aplication.company;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import tfg.cervecera.dto.company.CompanyLoginResponseDTO;
 import tfg.cervecera.exceptions.InvalidCredentialsException;
 import tfg.cervecera.model.Company;
-import tfg.cervecera.model.company.CompanyRepository;
+import tfg.cervecera.model.repositorys.CompanyRepository;
 
 @Service
 public class CompanyLoginService {
@@ -18,16 +19,19 @@ public class CompanyLoginService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Company login(String email, String rawPassword) {
+    public CompanyLoginResponseDTO login(String email, String rawPassword) {
 
-        Company company = companyRepository.findByEmail(email)
-            .orElseThrow(() ->
-                new IllegalArgumentException("Invalid email or password")
-            );
+        Company company = companyRepository.findByEmail(email.toLowerCase())
+            .orElseThrow(InvalidCredentialsException::new);
 
         if (!passwordEncoder.matches(rawPassword, company.getPasswordHash())) {
             throw new InvalidCredentialsException();
         }
-        return company;
+
+        return new CompanyLoginResponseDTO(
+                company.getId(),
+                company.getName(),
+                company.getEmail()
+        );
     }
 }
