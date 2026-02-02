@@ -36,10 +36,9 @@ public class BeerRegisterDTO {
 		this.pricePerL = pricePerL;
 	}
 
-
+	@NotNull(message = "La empresa es obligatoria")
     private Long companyId;
 
-	@NotNull(message = "La empresa es obligatoria")
     private Long factoryId;
 
     public BeerRegisterDTO() {}
