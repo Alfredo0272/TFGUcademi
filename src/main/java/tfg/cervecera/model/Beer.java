@@ -19,15 +19,15 @@ public class Beer {
     @Column(nullable = false)
     private Double alcohol;
 
-    @Column(name = "price_perl", nullable = false)
+    @Column(name = "price_per_l", nullable = false)
     private Double pricePerL;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "company_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "company_id")
     private Company company;
 
-    @ManyToOne
-    @JoinColumn(name = "factory_id")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "factory_id", nullable = false)
     private Factory factory;
 
     public Long getId() {

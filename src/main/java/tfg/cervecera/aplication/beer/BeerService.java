@@ -1,42 +1,40 @@
 package tfg.cervecera.aplication.beer;
 
 import java.util.List;
-
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityNotFoundException;
 import tfg.cervecera.dto.beer.BeerDTO;
 import tfg.cervecera.dto.beer.BeerRegisterDTO;
 
 import tfg.cervecera.model.Beer;
-import tfg.cervecera.model.Company;
+import tfg.cervecera.model.Factory;
 import tfg.cervecera.model.repositorys.BeerRepository;
-import tfg.cervecera.model.repositorys.CompanyRepository;
+import tfg.cervecera.model.repositorys.FactoryRepository;
 
 @Service
 public class BeerService {
 
     private final BeerRepository beerRepository;
-    private final CompanyRepository companyRepository;
+    private final FactoryRepository factoryRepository;
 
     public BeerService(BeerRepository beerRepository,
-                       CompanyRepository companyRepository) {
+    		FactoryRepository factoryRepository) {
         this.beerRepository = beerRepository;
-        this.companyRepository = companyRepository;
+        this.factoryRepository = factoryRepository;
     }
 
     public BeerDTO registerBeer(BeerRegisterDTO dto) {
 
-        Company company = companyRepository.findById(dto.getCompanyId())
-                .orElseThrow(() ->
-                        new IllegalArgumentException("La empresa no existe")
-                );
+    	Factory factory = factoryRepository.findById(dto.getFactoryId())
+    			.orElseThrow(() -> new EntityNotFoundException("Factory no encontrada"));
 
         Beer beer = new Beer();
         beer.setName(dto.getName());
         beer.setStyle(dto.getStyle());
         beer.setAlcohol(dto.getAlcohol());
         beer.setPricePerL(dto.getPricePerL());
-        beer.setCompany(company);
+        beer.setFactory(factory);
 
         Beer saved = beerRepository.save(beer);
 
@@ -51,13 +49,14 @@ public class BeerService {
     }
 
     private BeerDTO mapToResponse(Beer beer) {
-        return new BeerDTO(
-                beer.getId(),
-                beer.getName(),
-                beer.getStyle(),
-                beer.getAlcohol(),
-                beer.getPricePerL(),
-                beer.getCompany().getId()
-        );
+    	return new BeerDTO(
+    		    beer.getId(),
+    		    beer.getName(),
+    		    beer.getStyle(),
+    		    beer.getAlcohol(),
+    		    beer.getPricePerL(),
+    		    beer.getCompany()!=null ? beer.getCompany().getId() : null,
+    		    beer.getFactory().getId()
+    		);
     }
 }

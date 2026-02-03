@@ -1,29 +1,34 @@
-package tfg.cervecera.model;
+package tfg.cervecera.dto.factory;
 
 import java.util.List;
-import jakarta.persistence.*;
 
-@Entity
-@Table(name = "factories")
-public class Factory {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import tfg.cervecera.model.Beer;
+import tfg.cervecera.model.Company;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
+public class FactoryDTO {
+	
+	private Long id;
+    @NotBlank(message = "El nombre es obligatorio")
     private String name;
-    @Column(nullable = false)
+    @NotBlank(message = "La ubicación es obligatoria")
     private String location;
-    @Column(nullable = false)
+    @NotNull(message = "La capacidad de producción es obligatoria")
+    @Positive(message = "La capacidad debe ser mayor que 0")
     private Long capacity;
-
-    @ManyToOne
-    @JoinColumn(name = "company_id", nullable = true)
     private Company company;
-
-    @OneToMany(mappedBy = "factory")
     private List<Beer> beers;
+    
+    public FactoryDTO(Long id, String name, String location, Long copacity, Company company, List<Beer> beers) {
+		this.id = id;
+		this.name = name;
+		this.location = location;
+		this.capacity = copacity;
+		this.company = company;
+		this.beers = beers;
+	}
 
 	public Long getId() {
 		return id;
@@ -72,4 +77,7 @@ public class Factory {
 	public void setCapacity(Long capacity) {
 		this.capacity = capacity;
 	}
+    
+    
+
 }

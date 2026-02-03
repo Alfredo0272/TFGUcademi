@@ -26,7 +26,7 @@ public class BeerController {
     }
     
     @PostMapping("/new")
-    public ResponseEntity<Void> registerBeer(
+    public ResponseEntity<BeerRegisterDTO> registerBeer(
             @Valid @RequestBody BeerRegisterDTO dto) {
 
         beerService.registerBeer(dto);

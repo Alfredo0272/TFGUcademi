@@ -24,9 +24,7 @@ public class BeerRegisterDTO {
     @Digits(integer = 3, fraction = 2, message = "El alcohol debe tener máximo 2 decimales")
     private Double pricePerL;
     
-    @NotNull(message = "El precio por litro es obligatorio")
-    @DecimalMin(value = "0.0", inclusive = false, message = "El precio debe ser positivo")
-    @Digits(integer = 6, fraction = 2, message = "El precio debe tener máximo 2 decimales")
+
     public Double getPricePerL() {
 		return pricePerL;
 	}
@@ -36,9 +34,9 @@ public class BeerRegisterDTO {
 		this.pricePerL = pricePerL;
 	}
 
-	@NotNull(message = "La empresa es obligatoria")
     private Long companyId;
-
+    
+	@NotNull(message = "La factoria es obligatoria")
     private Long factoryId;
 
     public BeerRegisterDTO() {}
