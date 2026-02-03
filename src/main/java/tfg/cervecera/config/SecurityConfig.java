@@ -30,8 +30,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:4200"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedOrigins(List.of("http://localhost:8080"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
@@ -60,7 +60,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST,
                     "/api/companies/login",
-                    "/api/companies/register"
+                    "/api/companies/register",
+                    "/api/factories/register",
+                    "/api/beers/new"
                 ).permitAll()
                 .requestMatchers(HttpMethod.GET,
                     "/api/beers",

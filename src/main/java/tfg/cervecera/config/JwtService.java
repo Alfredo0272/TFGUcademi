@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.springframework.stereotype.Service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,9 +14,9 @@ import tfg.cervecera.model.Company;
 
 @Service
 public class JwtService {
-	
-	private static final String secretKey =  System.getenv("JWT_SECRET");
-	
+
+    private static final String secretKey = System.getenv("JWT_SECRET");
+
     @PostConstruct
     public void checkKey() {
         if (secretKey == null || secretKey.length() < 32) {
@@ -27,34 +28,38 @@ public class JwtService {
 
     public String generateToken(Company company) {
         return Jwts.builder()
-                .setSubject(company.getEmail())
-                .claim("companyId", company.getId())
-                .setIssuedAt(new Date())
-                .setExpiration(
-                    new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 4)
-                )
-                .signWith(
-                    Keys.hmacShaKeyFor(secretKey.getBytes()),
-                    SignatureAlgorithm.HS256
-                )
-                .compact();
+            .setSubject(company.getEmail())
+            .claim("companyId", company.getId())
+            .setIssuedAt(new Date())
+            .setExpiration(
+                new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 4)
+            )
+            .signWith(
+                Keys.hmacShaKeyFor(secretKey.getBytes()),
+                SignatureAlgorithm.HS256
+            )
+            .compact();
+    }
+
+    private Claims getClaims(String token) {
+        return Jwts.parserBuilder()
+            .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
     }
 
     public String extractEmail(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
-                .build()
-                .parseClaimsJws(token)
-                .getBody()
-                .getSubject();
+        return getClaims(token).getSubject();
+    }
+
+    public Long extractCompanyId(String token) {
+        return getClaims(token).get("companyId", Long.class);
     }
 
     public boolean isTokenValid(String token) {
         try {
-            Jwts.parserBuilder()
-                .setSigningKey(Keys.hmacShaKeyFor(secretKey.getBytes()))
-                .build()
-                .parseClaimsJws(token);
+            getClaims(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;

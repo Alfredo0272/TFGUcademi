@@ -1,6 +1,8 @@
 package tfg.cervecera.model;
 
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,7 +25,7 @@ public class Stock {
     private Beer beer;
 
     @Column(nullable = false)
-    private Double productionCostL;
+    private BigDecimal productionCostL;
 
     @Column(nullable = false)
     private Double productionVolumeL;
@@ -66,11 +68,11 @@ public class Stock {
 		this.beer = beer;
 	}
 
-	public Double getProductionCostL() {
+	public BigDecimal getProductionCostL() {
 		return productionCostL;
 	}
 
-	public void setProductionCostL(Double productionCostL) {
+	public void setProductionCostL(BigDecimal productionCostL) {
 		this.productionCostL = productionCostL;
 	}
 

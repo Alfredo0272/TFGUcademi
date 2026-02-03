@@ -8,7 +8,5 @@ import tfg.cervecera.model.Beer;
 @Repository
 public interface BeerRepository extends JpaRepository<Beer, Long> {
 	
-	
-	
 }
 
