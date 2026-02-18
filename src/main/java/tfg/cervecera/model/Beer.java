@@ -1,9 +1,13 @@
 package tfg.cervecera.model;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
-@Table(name = "beers")
+@Table(name = "beers", indexes = {
+    @Index(name = "idx_beer_factory", columnList = "factory_id"),
+    @Index(name = "idx_beer_style", columnList = "style")
+})
 public class Beer {
 
     @Id
@@ -19,12 +23,8 @@ public class Beer {
     @Column(nullable = false)
     private Double alcohol;
 
-    @Column(name = "price_per_l", nullable = false)
-    private Double pricePerL;
-
-    @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @Column(name = "price_per_l", nullable = false, precision = 10, scale = 2)
+    private BigDecimal pricePerL;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "factory_id", nullable = false)
@@ -32,6 +32,10 @@ public class Beer {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -58,20 +62,12 @@ public class Beer {
         this.alcohol = alcohol;
     }
 
-    public Double getPricePerL() {
+    public BigDecimal getPricePerL() {
         return pricePerL;
     }
 
-    public void setPricePerL(Double pricePerL) {
+    public void setPricePerL(BigDecimal pricePerL) {
         this.pricePerL = pricePerL;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
     }
 
     public Factory getFactory() {

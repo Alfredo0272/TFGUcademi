@@ -1,10 +1,12 @@
 package tfg.cervecera.dto.beer;
 
+import java.math.BigDecimal;
+
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public class BeerRegisterDTO {
 
@@ -20,26 +22,22 @@ public class BeerRegisterDTO {
     private Double alcohol;
     
     @NotNull(message = "El precio por litro es obligatorio")
-    @DecimalMin(value = "0.0", inclusive = false, message = "El precio debe ser positivo")
-    @Digits(integer = 3, fraction = 2, message = "El alcohol debe tener máximo 2 decimales")
-    private Double pricePerL;
-    
-
-    public Double getPricePerL() {
-		return pricePerL;
-	}
-
-
-	public void setPricePerL(Double pricePerL) {
-		this.pricePerL = pricePerL;
-	}
-
-    private Long companyId;
+    @Positive
+    private BigDecimal pricePerL;
     
 	@NotNull(message = "La factoria es obligatoria")
     private Long factoryId;
 
     public BeerRegisterDTO() {}
+    
+    public BeerRegisterDTO(String name, String style, Double alcohol, 
+            BigDecimal pricePerL, Long factoryId) {
+    		this.name = name;
+    		this.style = style;
+    		this.alcohol = alcohol;
+    		this.pricePerL = pricePerL;
+    		this.factoryId = factoryId;
+    }
 
 
     public String getName() {
@@ -66,12 +64,12 @@ public class BeerRegisterDTO {
         this.alcohol = alcohol;
     }
 
-    public Long getCompanyId() {
-        return companyId;
+    public BigDecimal getPricePerL() {
+        return pricePerL;
     }
 
-    public void setCompanyId(Long companyId) {
-        this.companyId = companyId;
+    public void setPricePerL(BigDecimal pricePerL) {
+        this.pricePerL = pricePerL;
     }
 
     public Long getFactoryId() {
@@ -82,5 +80,3 @@ public class BeerRegisterDTO {
         this.factoryId = factoryId;
     }
 }
-    
-
