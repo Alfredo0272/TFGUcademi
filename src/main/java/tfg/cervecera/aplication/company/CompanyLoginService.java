@@ -23,15 +23,18 @@ public class CompanyLoginService {
         this.jwtService = jwtService;
     }
 
-    public CompanyLoginResponseDTO login(String email, String rawPassword) {
+    public CompanyLoginResponseDTO login(String email, String rawPassword) throws InvalidCredentialsException {
+        if (email == null || email.isEmpty() || rawPassword == null || rawPassword.isEmpty()) {
+            throw new InvalidCredentialsException();
+        }
 
         Company company = companyRepository.findByEmail(email.toLowerCase())
-            .orElseThrow(InvalidCredentialsException::new);
+            .orElseThrow(() -> new InvalidCredentialsException());
 
         if (!passwordEncoder.matches(rawPassword, company.getPasswordHash())) {
             throw new InvalidCredentialsException();
         }
-        
+
         String token = jwtService.generateToken(company);
 
         return new CompanyLoginResponseDTO(

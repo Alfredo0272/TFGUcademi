@@ -1,17 +1,25 @@
 package tfg.cervecera.model;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sales")
+@Table(name = "sales", indexes = {
+    @Index(name = "idx_sale_date", columnList = "soldAt"),
+    @Index(name = "idx_sale_beer", columnList = "beer_id"),
+    @Index(name = "idx_sale_factory", columnList = "factory_id"),
+    @Index(name = "idx_sale_company", columnList = "company_id")
+})
 public class Sale {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
 
     @ManyToOne
     @JoinColumn(name = "beer_id", nullable = false)
@@ -21,10 +29,10 @@ public class Sale {
     @JoinColumn(name = "factory_id", nullable = false)
     private Factory factory;
 
-    @Column(nullable = false)
-    private Double quantityL;
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal quantityL;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal totalPrice;
 
     @Column(nullable = false)
@@ -37,52 +45,59 @@ public class Sale {
         this.soldAt = LocalDateTime.now();
     }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Beer getBeer() {
-		return beer;
-	}
+    public Company getCompany() {
+        return company;
+    }
 
-	public void setBeer(Beer beer) {
-		this.beer = beer;
-	}
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 
-	public Factory getFactory() {
-		return factory;
-	}
+    public Beer getBeer() {
+        return beer;
+    }
 
-	public void setFactory(Factory factory) {
-		this.factory = factory;
-	}
+    public void setBeer(Beer beer) {
+        this.beer = beer;
+    }
 
-	public Double getQuantityL() {
-		return quantityL;
-	}
+    public Factory getFactory() {
+        return factory;
+    }
 
-	public void setQuantityL(Double quantityL) {
-		this.quantityL = quantityL;
-	}
+    public void setFactory(Factory factory) {
+        this.factory = factory;
+    }
 
-	public BigDecimal getTotalPrice() {
-		return totalPrice;
-	}
+    public BigDecimal getQuantityL() {
+        return quantityL;
+    }
 
-	public void setTotalPrice(BigDecimal totalPrice) {
-		this.totalPrice = totalPrice;
-	}
+    public void setQuantityL(BigDecimal quantityL) {
+        this.quantityL = quantityL;
+    }
 
-	public LocalDateTime getSoldAt() {
-		return soldAt;
-	}
+    public BigDecimal getTotalPrice() {
+        return totalPrice;
+    }
 
-	public void setSoldAt(LocalDateTime soldAt) {
-		this.soldAt = soldAt;
-	}
+    public void setTotalPrice(BigDecimal totalPrice) {
+        this.totalPrice = totalPrice;
+    }
 
+    public LocalDateTime getSoldAt() {
+        return soldAt;
+    }
+
+    public void setSoldAt(LocalDateTime soldAt) {
+        this.soldAt = soldAt;
+    }
 }

@@ -4,7 +4,10 @@ import java.util.List;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "factories")
+@Table(name = "factories", indexes = {
+    @Index(name = "idx_factory_company", columnList = "company_id"),
+    @Index(name = "idx_factory_location", columnList = "location")
+})
 public class Factory {
 
     @Id
@@ -13,63 +16,65 @@ public class Factory {
 
     @Column(nullable = false)
     private String name;
+
     @Column(nullable = false)
     private String location;
+
     @Column(nullable = false)
     private Long capacity;
 
     @ManyToOne
-    @JoinColumn(name = "company_id", nullable = true)
+    @JoinColumn(name = "company_id", nullable = false)
     private Company company;
 
     @OneToMany(mappedBy = "factory")
     private List<Beer> beers;
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getLocation() {
-		return location;
-	}
+    public String getLocation() {
+        return location;
+    }
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
-	public Company getCompany() {
-		return company;
-	}
+    public Long getCapacity() {
+        return capacity;
+    }
 
-	public void setCompany(Company company) {
-		this.company = company;
-	}
+    public void setCapacity(Long capacity) {
+        this.capacity = capacity;
+    }
 
-	public List<Beer> getBeers() {
-		return beers;
-	}
+    public Company getCompany() {
+        return company;
+    }
 
-	public void setBeers(List<Beer> beers) {
-		this.beers = beers;
-	}
+    public void setCompany(Company company) {
+        this.company = company;
+    }
 
-	public Long getCapacity() {
-		return capacity;
-	}
+    public List<Beer> getBeers() {
+        return beers;
+    }
 
-	public void setCapacity(Long capacity) {
-		this.capacity = capacity;
-	}
+    public void setBeers(List<Beer> beers) {
+        this.beers = beers;
+    }
 }

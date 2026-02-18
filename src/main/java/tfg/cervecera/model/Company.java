@@ -2,17 +2,19 @@ package tfg.cervecera.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "companies")
+@Table(name = "companies", indexes = {
+    @Index(name = "idx_company_email", columnList = "email")
+})
 public class Company {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false, unique = true)
@@ -22,90 +24,91 @@ public class Company {
     private String passwordHash;
 
     private String country;
+
     private Integer foundedYear;
 
+    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "company")
     private List<Factory> factories;
 
     @OneToMany(mappedBy = "company")
-    private List<Beer> beers;
+    private List<Sale> sales;
 
     public Company() {
         this.createdAt = LocalDateTime.now();
     }
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public String getPasswordHash() {
-		return passwordHash;
-	}
+    public String getPasswordHash() {
+        return passwordHash;
+    }
 
-	public void setPasswordHash(String passwordHash) {
-		this.passwordHash = passwordHash;
-	}
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
 
-	public String getCountry() {
-		return country;
-	}
+    public String getCountry() {
+        return country;
+    }
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-	public Integer getFoundedYear() {
-		return foundedYear;
-	}
+    public Integer getFoundedYear() {
+        return foundedYear;
+    }
 
-	public void setFoundedYear(Integer foundedYear) {
-		this.foundedYear = foundedYear;
-	}
+    public void setFoundedYear(Integer foundedYear) {
+        this.foundedYear = foundedYear;
+    }
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-	public List<Factory> getFactories() {
-		return factories;
-	}
+    public List<Factory> getFactories() {
+        return factories;
+    }
 
-	public void setFactories(List<Factory> factories) {
-		this.factories = factories;
-	}
+    public void setFactories(List<Factory> factories) {
+        this.factories = factories;
+    }
 
-	public List<Beer> getBeers() {
-		return beers;
-	}
+    public List<Sale> getSales() {
+        return sales;
+    }
 
-	public void setBeers(List<Beer> beers) {
-		this.beers = beers;
-	}
-
+    public void setSales(List<Sale> sales) {
+        this.sales = sales;
+    }
 }

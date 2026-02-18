@@ -22,7 +22,7 @@ public class CompanyRegisterService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void registerCompany(CompanyRegisterDTO dto) {
+    public void registerCompany(CompanyRegisterDTO dto) throws EmailAlreadyExistsException {
     	
     	String email = dto.getEmail().toLowerCase();
 
