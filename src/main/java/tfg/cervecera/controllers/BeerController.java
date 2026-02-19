@@ -27,12 +27,11 @@ public class BeerController {
         this.beerService = beerService;
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public ResponseEntity<?> registerBeer(
             @Valid @RequestBody BeerRegisterDTO dto) {
 
-        beerService.registerBeer(dto);
-
+       beerService.createBeer(dto);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body("Cerveza registrada correctamente");

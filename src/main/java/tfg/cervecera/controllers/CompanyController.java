@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import tfg.cervecera.aplication.company.CompanyLoginService;
-import tfg.cervecera.aplication.company.CompanyRegisterService;
+import tfg.cervecera.aplication.company.CompanyService;
 import tfg.cervecera.dto.company.CompanyLoginDTO;
 import tfg.cervecera.dto.company.CompanyLoginResponseDTO;
 import tfg.cervecera.dto.company.CompanyRegisterDTO;
@@ -15,10 +15,10 @@ import tfg.cervecera.dto.company.CompanyRegisterDTO;
 @RequestMapping("/api/companies")
 public class CompanyController {
 	
-    private final CompanyRegisterService registerService;
+    private final CompanyService registerService;
     private final CompanyLoginService loginService;
 
-    public CompanyController(CompanyRegisterService registerService,
+    public CompanyController(CompanyService registerService,
                              CompanyLoginService loginService) {
         this.registerService = registerService;
         this.loginService = loginService;

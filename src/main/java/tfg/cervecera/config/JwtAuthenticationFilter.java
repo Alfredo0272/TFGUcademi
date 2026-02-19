@@ -12,18 +12,14 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import tfg.cervecera.model.repositorys.CompanyRepository;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final CompanyRepository companyRepository;
 
-    public JwtAuthenticationFilter(JwtService jwtService,
-                                   CompanyRepository companyRepository) {
+    public JwtAuthenticationFilter(JwtService jwtService) {
         this.jwtService = jwtService;
-        this.companyRepository = companyRepository;
     }
 
     @Override
@@ -51,13 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String email = jwtService.extractEmail(token);
-
-        var companyOpt = companyRepository.findByEmail(email);
-        if (companyOpt.isEmpty()) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        Long companyId = jwtService.extractCompanyId(token);
 
         var authorities = List.of(
             new SimpleGrantedAuthority("ROLE_COMPANY")
@@ -65,10 +55,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         UsernamePasswordAuthenticationToken authentication =
             new UsernamePasswordAuthenticationToken(
-                companyOpt.get().getId(), null, authorities
+                companyId, null, authorities
             );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
         filterChain.doFilter(request, response);
     }
 }

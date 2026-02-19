@@ -4,6 +4,7 @@ package tfg.cervecera.aplication.company;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import tfg.cervecera.dto.company.CompanyDTO;
 import tfg.cervecera.dto.company.CompanyRegisterDTO;
 import tfg.cervecera.exceptions.EmailAlreadyExistsException;
 import tfg.cervecera.model.Company;
@@ -11,12 +12,12 @@ import tfg.cervecera.model.repositorys.CompanyRepository;
 
 
 @Service
-public class CompanyRegisterService {
+public class CompanyService {
 
     private final CompanyRepository companyRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public CompanyRegisterService(CompanyRepository companyRepository,
+    public CompanyService(CompanyRepository companyRepository,
                                   PasswordEncoder passwordEncoder) {
         this.companyRepository = companyRepository;
         this.passwordEncoder = passwordEncoder;
@@ -40,4 +41,29 @@ public class CompanyRegisterService {
 
     	    companyRepository.save(company);
     }
+    
+    public CompanyDTO findById(Long id) {
+        Company company = companyRepository.findById(id)
+                .orElseThrow();
+        return mapToDTO(company);
+    }
+
+    public CompanyDTO findByEmail(String email) {
+        Company company = companyRepository.findByEmail(email)
+                .orElseThrow();
+        return mapToDTO(company);
+    }
+
+    private CompanyDTO mapToDTO(Company company) {
+        return new CompanyDTO(
+                company.getId(),
+                company.getName(),
+                company.getEmail(),
+                company.getCountry(),
+                company.getFoundedYear(),
+                company.getCreatedAt()
+        );
+    }
 }
+    
+    
