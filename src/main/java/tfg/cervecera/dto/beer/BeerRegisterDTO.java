@@ -25,6 +25,7 @@ public class BeerRegisterDTO {
     @Positive
     private BigDecimal pricePerL;
     
+    
 	@NotNull(message = "La factoria es obligatoria")
     private Long factoryId;
 
@@ -70,7 +71,7 @@ public class BeerRegisterDTO {
 
     public void setPricePerL(BigDecimal pricePerL) {
         this.pricePerL = pricePerL;
-    }
+    }    
 
     public Long getFactoryId() {
         return factoryId;
