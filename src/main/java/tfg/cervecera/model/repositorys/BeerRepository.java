@@ -11,6 +11,8 @@ import tfg.cervecera.model.Beer;
 public interface BeerRepository extends JpaRepository<Beer, Long> {
 	
 	List<Beer> findByCompanyId(Long companyId);
+	
+	
 
 }
 

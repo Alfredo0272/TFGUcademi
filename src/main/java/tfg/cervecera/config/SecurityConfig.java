@@ -30,8 +30,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:8080"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT"));
+        config.setAllowedOriginPatterns(List.of("*"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT" ,"DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
 
@@ -58,18 +58,18 @@ public class SecurityConfig {
                 )
             )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.POST,
-                	"/api/companies/login",
-                    "/api/companies/register"
-                ).permitAll()
-                .requestMatchers(HttpMethod.GET,
-                    "/api/beers",
-                    "/api/beers/**",
-                    "/api/beer-styles",
-                    "/api/beer-styles/**"
-                ).permitAll()
-                .anyRequest().authenticated()
-            )
+            	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            	    .requestMatchers(HttpMethod.POST,
+            	        "/api/companies/login",
+            	        "/api/companies/register"
+            	    ).permitAll()
+            	    .requestMatchers(HttpMethod.GET,
+            	        "/api/beers/**",
+            	        "/api/beer-styles/**"
+            	    ).permitAll()
+
+            	    .anyRequest().authenticated()
+            	)
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
