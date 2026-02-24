@@ -20,6 +20,10 @@ public class SaleDTO {
     @NotNull
     private Long factoryId;
     private String factoryName;
+    
+    @NotNull
+    @Positive
+    private BigDecimal unitPrice;
 
     @NotNull
     @Positive
@@ -34,7 +38,7 @@ public class SaleDTO {
     public SaleDTO() {}
 
     public SaleDTO(Long id, Long companyId, String companyName, Long beerId, 
-                  String beerName, Long factoryId, String factoryName, 
+                  String beerName, Long factoryId, String factoryName, BigDecimal unitPrice, 
                   BigDecimal quantityL, BigDecimal totalPrice, LocalDateTime soldAt) {
         this.id = id;
         this.companyId = companyId;
@@ -43,6 +47,7 @@ public class SaleDTO {
         this.beerName = beerName;
         this.factoryId = factoryId;
         this.factoryName = factoryName;
+        this.unitPrice = unitPrice;
         this.quantityL = quantityL;
         this.totalPrice = totalPrice;
         this.soldAt = soldAt;
@@ -102,6 +107,14 @@ public class SaleDTO {
 
     public void setFactoryName(String factoryName) {
         this.factoryName = factoryName;
+    }
+    
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(BigDecimal unitPrice) {
+        this.unitPrice = unitPrice;
     }
 
     public BigDecimal getQuantityL() {

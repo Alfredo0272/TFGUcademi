@@ -31,6 +31,9 @@ public class Sale {
 
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal quantityL;
+    
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal unitPrice;
 
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal totalPrice;
@@ -83,6 +86,14 @@ public class Sale {
 
     public void setQuantityL(BigDecimal quantityL) {
         this.quantityL = quantityL;
+    }
+    
+    public BigDecimal getUnitPrice() {
+		return unitPrice;
+	}
+    
+    public void setUnitPrice(BigDecimal unitPrice) {
+    	this.unitPrice = unitPrice;
     }
 
     public BigDecimal getTotalPrice() {
