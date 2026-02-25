@@ -61,4 +61,15 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ApiError("Error interno del servidor", 500));
     }
+    
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<?> handleInsufficientStock(InsufficientStockException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(Map.of(
+                        "error", "STOCK_INSUFFICIENT",
+                        "message", ex.getMessage()
+                ));
+    }
 }
