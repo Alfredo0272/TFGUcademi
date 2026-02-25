@@ -39,7 +39,7 @@ public class BeerController {
 
     @GetMapping
     public ResponseEntity<List<BeerDTO>> getAllBeers() {
-        return ResponseEntity.ok(beerService.findAll());
+        return ResponseEntity.ok(beerService.findAllByCompany());
     }
 
     @GetMapping("/{id}")

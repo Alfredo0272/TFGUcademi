@@ -29,6 +29,11 @@ public class StockService {
         this.beerRepository = beerRepository;
         this.factoryRepository = factoryRepository;
     }
+    
+    private Stock findStockEntityById(Long id) {
+        return stockRepository.findById(id)
+            .orElseThrow(() -> new IllegalArgumentException("El stock no existe"));
+    }
 
     public void createStock(StockRegisterDTO dto) {
 
@@ -57,20 +62,20 @@ public class StockService {
         stockRepository.save(stock);
     }
     
-    public Stock getStockById (Long id) {
-    	return stockRepository.findById(id)
-		.orElseThrow(() -> new IllegalArgumentException("El stock no existe"));
+    public StockDTO getStockById(Long id) {
+        return mapToDTO(findStockEntityById(id));
     }
     
-    public void deleteStockById (Long id) {
-		Stock stock = getStockById(id);
-		
-		if (stock.getAvailableL().compareTo(BigDecimal.ZERO) > 0) {
-			throw new IllegalStateException("No se puede eliminar un stock con volumen disponible");
-		}
-		
-		stockRepository.delete(stock);
-	}
+    public void deleteStockById(Long id) {
+
+        Stock stock = findStockEntityById(id);
+
+        if (stock.getAvailableL().compareTo(BigDecimal.ZERO) > 0) {
+            throw new IllegalStateException("No se puede eliminar un stock con volumen disponible");
+        }
+
+        stockRepository.delete(stock);
+    }
     
     public List<StockDTO> findAll(){
     	return stockRepository.findAll()
@@ -81,8 +86,12 @@ public class StockService {
     }
     
     public void addProduction(Long stockId, BigDecimal additionalVolume) {
+    	
+        if (additionalVolume == null || additionalVolume.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("El volumen adicional debe ser mayor que 0");
+        }
 
-        Stock stock = getStockById(stockId);
+        Stock stock = findStockEntityById(stockId);
 
         stock.setProductionVolumeL(
             stock.getProductionVolumeL().add(additionalVolume)
@@ -96,15 +105,25 @@ public class StockService {
     }
     
     private StockDTO mapToDTO(Stock stock) {
-		StockDTO dto = new StockDTO();
-		dto.setId(stock.getId());
-		dto.setBeerId(stock.getBeer().getId());
-		dto.setFactoryId(stock.getFactory().getId());
-		dto.setProductionCostL(stock.getProductionCostL());
-		dto.setProductionVolumeL(stock.getProductionVolumeL());
-		dto.setAvailableL(stock.getAvailableL());
-		return dto;
-	}
+
+        StockDTO dto = new StockDTO();
+
+        dto.setId(stock.getId());
+
+        dto.setFactoryId(stock.getFactory().getId());
+        dto.setFactoryName(stock.getFactory().getName());
+
+        dto.setBeerId(stock.getBeer().getId());
+        dto.setBeerName(stock.getBeer().getName());
+
+        dto.setProductionCostL(stock.getProductionCostL());
+        dto.setProductionVolumeL(stock.getProductionVolumeL());
+        dto.setAvailableL(stock.getAvailableL());
+
+        dto.setUpdatedAt(stock.getUpdatedAt());
+
+        return dto;
+    }
     
     
 }

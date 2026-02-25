@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import tfg.cervecera.config.SecurityUtils;
 import tfg.cervecera.dto.sale.SaleDTO;
 import tfg.cervecera.dto.sale.SaleRegisterDTO;
+import tfg.cervecera.exceptions.InsufficientStockException;
 import tfg.cervecera.model.Beer;
 import tfg.cervecera.model.Company;
 import tfg.cervecera.model.Factory;
@@ -60,15 +61,31 @@ public class SaleService {
         if (!factory.getCompany().getId().equals(companyId)) {
             throw new RuntimeException("Factory does not belong to your company");
         }
+        if (!beer.getCompany().getId().equals(companyId)) {
+            throw new RuntimeException("Beer does not belong to your company");
+        }
+        
 
         Stock stock = stockRepository
                 .findByFactoryIdAndBeerId(factory.getId(), beer.getId())
                 .orElseThrow(() -> new RuntimeException("Stock not found"));
 
-        if (stock.getAvailableL().compareTo(dto.getQuantityL()) < 0) {
-            throw new RuntimeException("Not enough stock available");
+        if (dto.getQuantityL() == null) {
+            throw new RuntimeException("Quantity cannot be null");
         }
 
+        if (stock.getAvailableL().compareTo(dto.getQuantityL()) < 0) {
+            throw new InsufficientStockException(
+                "Stock insuficiente. Disponible: "
+                + stock.getAvailableL()
+                + "L"
+            );
+        }
+        
+		 if (dto.getUnitPrice() == null) {
+			throw new RuntimeException("Unit price cannot be null");
+        }
+			 
         stock.setAvailableL(
                 stock.getAvailableL().subtract(dto.getQuantityL())
         );
@@ -94,11 +111,18 @@ public class SaleService {
         SaleDTO dto = new SaleDTO();
 
         dto.setId(sale.getId());
+
         dto.setCompanyId(sale.getCompany().getId());
+        dto.setCompanyName(sale.getCompany().getName());
+
         dto.setBeerId(sale.getBeer().getId());
+        dto.setBeerName(sale.getBeer().getName());
+
         dto.setFactoryId(sale.getFactory().getId());
-        dto.setQuantityL(sale.getQuantityL());
+        dto.setFactoryName(sale.getFactory().getName());
+
         dto.setUnitPrice(sale.getUnitPrice());
+        dto.setQuantityL(sale.getQuantityL());
         dto.setTotalPrice(sale.getTotalPrice());
         dto.setSoldAt(sale.getSoldAt());
 

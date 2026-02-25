@@ -38,6 +38,7 @@ public class BeerService {
 	            .orElseThrow(() -> new EntityNotFoundException("Company no encontrada"));
 	    Factory factory = factoryRepository.findById(dto.getFactoryId())
 	            .orElseThrow(() -> new EntityNotFoundException("Factory no encontrada"));
+	    
 	    Beer beer = new Beer();
 	    beer.setName(dto.getName());
 	    beer.setStyle(dto.getStyle());
@@ -58,10 +59,10 @@ public class BeerService {
         if (dto.getStyle() == null || dto.getStyle().isEmpty()) {
             throw new InvalidDataException("El estilo de la cerveza no puede estar vacío");
         }
-        if (dto.getAlcohol() <= 0) {
+        if (dto.getAlcohol() == null || dto.getAlcohol() <= 0) {
             throw new InvalidDataException("El contenido de alcohol debe ser mayor que 0");
         }
-        if (dto.getPricePerL().compareTo(java.math.BigDecimal.ZERO) <= 0) {
+        if (dto.getPricePerL() == null || dto.getPricePerL().compareTo(java.math.BigDecimal.ZERO) <= 0) {
             throw new InvalidDataException("El precio por litro debe ser mayor que 0");
         }
     }
