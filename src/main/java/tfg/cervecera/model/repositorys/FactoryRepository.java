@@ -1,5 +1,6 @@
 package tfg.cervecera.model.repositorys;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,8 @@ import tfg.cervecera.model.Factory;
 public interface FactoryRepository extends JpaRepository<Factory, Long> {
 
 	Optional<Factory> findById(Long companyId);
+	
+	List<Factory> findByCompanyId(Long companyId);
 
 	boolean existsByName(String name);	
 	

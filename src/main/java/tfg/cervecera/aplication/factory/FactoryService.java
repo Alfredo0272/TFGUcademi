@@ -61,7 +61,8 @@ public class FactoryService {
 
     public List<FactoryDTO> findAll() {
         Long companyId = SecurityUtils.getCurrentCompanyId();
-        return factoryRepository.findById(companyId)
+
+        return factoryRepository.findByCompanyId(companyId)
                 .stream()
                 .map(this::mapToDTO)
                 .toList();
