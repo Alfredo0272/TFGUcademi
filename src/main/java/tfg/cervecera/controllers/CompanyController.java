@@ -10,6 +10,7 @@ import tfg.cervecera.aplication.company.CompanyService;
 import tfg.cervecera.dto.company.CompanyLoginDTO;
 import tfg.cervecera.dto.company.CompanyLoginResponseDTO;
 import tfg.cervecera.dto.company.CompanyRegisterDTO;
+import tfg.cervecera.exceptions.InvalidCredentialsException;
 
 @RestController
 @RequestMapping("/api/companies")
@@ -25,13 +26,15 @@ public class CompanyController {
     }
     
     @PostMapping("/register")
-    public ResponseEntity<Void> register(
+    public ResponseEntity<CompanyRegisterDTO> register(
             @Valid @RequestBody CompanyRegisterDTO dto) {
 
         registerService.registerCompany(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-    
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(dto);
+    } 
+   
     @PostMapping("/login")
     public ResponseEntity<CompanyLoginResponseDTO> login(
             @Valid @RequestBody CompanyLoginDTO dto) {
@@ -41,7 +44,19 @@ public class CompanyController {
 
         return ResponseEntity.ok(response);
     }
-}
-    
-    
 
+    @GetMapping("/me")
+    public ResponseEntity<CompanyLoginResponseDTO> loginWithToken(
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            throw new InvalidCredentialsException();
+        }
+
+        String token = authHeader.substring(7);
+
+        CompanyLoginResponseDTO response = loginService.loginWithToken(token);
+
+        return ResponseEntity.ok(response);
+    }
+}

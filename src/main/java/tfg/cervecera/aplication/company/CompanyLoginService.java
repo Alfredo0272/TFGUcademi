@@ -44,4 +44,29 @@ public class CompanyLoginService {
                 token
         );
     }
+    
+    public CompanyLoginResponseDTO loginWithToken(String token) {
+
+        if (token == null || token.isEmpty()) {
+            throw new InvalidCredentialsException();
+        }
+
+        String email;
+
+        try {
+            email = jwtService.extractEmail(token);
+        } catch (Exception e) {
+            throw new InvalidCredentialsException();
+        }
+
+        Company company = companyRepository.findByEmail(email.toLowerCase())
+                .orElseThrow(InvalidCredentialsException::new);
+
+        return new CompanyLoginResponseDTO(
+                company.getId(),
+                company.getName(),
+                company.getEmail(),
+                token
+        );
+    }
 }
