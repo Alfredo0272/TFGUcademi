@@ -77,6 +77,18 @@ public class StockService {
         stockRepository.delete(stock);
     }
     
+    public List<StockDTO> findStocksByBeerId(Long beerId) {
+        List<Stock> stocks = stockRepository.findByBeerId(beerId);
+
+        if (stocks.isEmpty()) {
+            throw new IllegalArgumentException("No hay stock para esta cerveza");
+        }
+
+        return stocks.stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+    
     public List<StockDTO> findAll(){
     	return stockRepository.findAll()
     			.stream()

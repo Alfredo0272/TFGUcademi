@@ -16,6 +16,7 @@ import jakarta.validation.Valid;
 import tfg.cervecera.aplication.beer.BeerService;
 import tfg.cervecera.dto.beer.BeerDTO;
 import tfg.cervecera.dto.beer.BeerRegisterDTO;
+import tfg.cervecera.model.Beer;
 
 @RestController
 @RequestMapping("/api/beers")
@@ -28,18 +29,36 @@ public class BeerController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<?> registerBeer(
+    public ResponseEntity<BeerDTO> registerBeer(
             @Valid @RequestBody BeerRegisterDTO dto) {
 
-       beerService.createBeer(dto);
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body("Cerveza registrada correctamente");
+        Beer beer = beerService.createBeer(dto);
+
+        BeerDTO response = new BeerDTO(
+            beer.getId(),
+            beer.getName(),
+            beer.getStyle(),
+            beer.getAlcohol(),
+            beer.getPricePerL(),
+            beer.getFactory().getId(),
+            beer.getFactory().getName()
+        );
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping
     public ResponseEntity<List<BeerDTO>> getAllBeers() {
         return ResponseEntity.ok(beerService.findAllByCompany());
+    }
+    
+    @GetMapping("/factory/{factoryId}")
+    public ResponseEntity<List<BeerDTO>> getBeersByFactory(
+            @PathVariable Long factoryId) {
+
+        return ResponseEntity.ok(
+            beerService.findAllByFactory(factoryId)
+        );
     }
 
     @GetMapping("/{id}")
@@ -48,8 +67,8 @@ public class BeerController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBeer(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteBeer(@PathVariable Long id) {
         beerService.deleteBeer(id);
-        return ResponseEntity.ok("Cerveza eliminada correctamente");
+        return ResponseEntity.noContent().build();
     }
 }

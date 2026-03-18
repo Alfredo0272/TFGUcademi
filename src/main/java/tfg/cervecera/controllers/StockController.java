@@ -40,6 +40,11 @@ public class StockController {
 	    return ResponseEntity.ok(stockService.getStockById(id));
 	}
 	
+	@GetMapping("/beer/{id}")
+	public ResponseEntity<?> findStockByBeerId(@PathVariable Long id){
+	    return ResponseEntity.ok(stockService.findStocksByBeerId(id));
+	}
+	
 	@PutMapping("/{id}/production")
 	public ResponseEntity<?> addProduction(
 	        @PathVariable Long id,
@@ -47,6 +52,8 @@ public class StockController {
 
 	    stockService.addProduction(id, dto.getProductionVolumeL());
 
-	    return ResponseEntity.ok("Producción añadida correctamente");
+	    return ResponseEntity
+	    		.status(HttpStatus.ACCEPTED)
+	    		.body("Producción añadida correctamente");
 	}
 }
