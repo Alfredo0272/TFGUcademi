@@ -12,6 +12,7 @@ public interface BeerRepository extends JpaRepository<Beer, Long> {
 	
 	List<Beer> findByCompanyId(Long companyId);
 	
+	List<Beer> findByFactoryIdAndCompanyId(Long factoryId, Long companyId);
 	
 
 }

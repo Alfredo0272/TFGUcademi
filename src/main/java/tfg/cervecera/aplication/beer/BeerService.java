@@ -30,15 +30,17 @@ public class BeerService {
 	    this.companyRepository = companyRepository;
 	}
 
-	public void createBeer(BeerRegisterDTO dto) {
+	public Beer createBeer(BeerRegisterDTO dto) {
 	    validateBeerRegisterDTO(dto);
 
 	    Long companyId = SecurityUtils.getCurrentCompanyId();
+
 	    Company company = companyRepository.findById(companyId)
 	            .orElseThrow(() -> new EntityNotFoundException("Company no encontrada"));
+
 	    Factory factory = factoryRepository.findById(dto.getFactoryId())
 	            .orElseThrow(() -> new EntityNotFoundException("Factory no encontrada"));
-	    
+
 	    Beer beer = new Beer();
 	    beer.setName(dto.getName());
 	    beer.setStyle(dto.getStyle());
@@ -47,9 +49,7 @@ public class BeerService {
 	    beer.setCompany(company);
 	    beer.setFactory(factory);
 
-
-	    beerRepository.save(beer);
-
+	    return beerRepository.save(beer);
 	}
 	
     private void validateBeerRegisterDTO(BeerRegisterDTO dto) {
@@ -83,6 +83,21 @@ public class BeerService {
         return mapToDTO(beer);
     }
     
+    public List<BeerDTO> findAllByFactory(Long factoryId) {
+
+        if (factoryId == null || factoryId <= 0) {
+            throw new IllegalArgumentException("FactoryId no válido");
+        }
+
+        Long companyId = SecurityUtils.getCurrentCompanyId();
+
+        return beerRepository
+                .findByFactoryIdAndCompanyId(factoryId, companyId)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+    
     public List<BeerDTO> findAllByCompany() {
         Long companyId = SecurityUtils.getCurrentCompanyId();
         return beerRepository.findByCompanyId(companyId)
@@ -93,8 +108,16 @@ public class BeerService {
 
 
     public void deleteBeer(Long id) {
+
+        Long companyId = SecurityUtils.getCurrentCompanyId();
+
         Beer beer = beerRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Cerveza no encontrada"));
+
+        if (!beer.getCompany().getId().equals(companyId)) {
+            throw new SecurityException("No tienes permiso para eliminar esta cerveza");
+        }
+
         beerRepository.delete(beer);
     }
 
