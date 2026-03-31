@@ -1,7 +1,11 @@
 package tfg.cervecera.controllers;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +33,22 @@ public class SaleController {
         SaleDTO created = saleService.createSale(dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+    
+    @GetMapping("/company")
+    public ResponseEntity<List<SaleDTO>> getSalesByCompany() {
+
+        return ResponseEntity.ok(
+            saleService.getSalesByCompany()
+        );
+    }
+    
+    @GetMapping("/factory/{factoryId}")
+    public ResponseEntity<List<SaleDTO>> getSalesByFactory(
+            @PathVariable Long factoryId) {
+
+        return ResponseEntity.ok(
+            saleService.getSalesByFactory(factoryId)
+        );
     }
 }

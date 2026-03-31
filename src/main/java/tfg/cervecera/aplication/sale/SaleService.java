@@ -1,5 +1,7 @@
 package tfg.cervecera.aplication.sale;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -106,6 +108,34 @@ public class SaleService {
         return mapToDTO(saved);
     }
     
+    public List<SaleDTO> getSalesByCompany() {
+
+        Long companyId = SecurityUtils.getCurrentCompanyId();
+
+        return saleRepository.findByCompanyId(companyId)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+    
+    public List<SaleDTO> getSalesByFactory(Long factoryId) {
+
+        Long companyId = SecurityUtils.getCurrentCompanyId();
+
+        Factory factory = factoryRepository.findById(factoryId)
+                .orElseThrow(() -> new RuntimeException("Factory not found"));
+
+        if (!factory.getCompany().getId().equals(companyId)) {
+            throw new RuntimeException("Factory does not belong to your company");
+        }
+
+        return saleRepository.findByFactoryId(factoryId)
+                .stream()
+                .map(this::mapToDTO)
+                .toList();
+    }
+    
+    
     private SaleDTO mapToDTO(Sale sale) {
 
         SaleDTO dto = new SaleDTO();
@@ -129,4 +159,5 @@ public class SaleService {
         return dto;
     }
 	}
+
     	
