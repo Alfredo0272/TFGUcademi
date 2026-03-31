@@ -97,8 +97,8 @@ public class StockService {
     	
     }
     
-    public void addProduction(Long stockId, BigDecimal additionalVolume) {
-    	
+    public Stock addProduction(Long stockId, BigDecimal additionalVolume) {
+
         if (additionalVolume == null || additionalVolume.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("El volumen adicional debe ser mayor que 0");
         }
@@ -113,7 +113,7 @@ public class StockService {
             stock.getAvailableL().add(additionalVolume)
         );
 
-        stockRepository.save(stock);
+        return stockRepository.save(stock); 
     }
     
     private StockDTO mapToDTO(Stock stock) {

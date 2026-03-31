@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import tfg.cervecera.config.SecurityUtils;
 import tfg.cervecera.dto.beer.BeerDTO;
 import tfg.cervecera.dto.beer.BeerRegisterDTO;
@@ -14,6 +15,8 @@ import tfg.cervecera.model.Factory;
 import tfg.cervecera.model.repositorys.BeerRepository;
 import tfg.cervecera.model.repositorys.CompanyRepository;
 import tfg.cervecera.model.repositorys.FactoryRepository;
+import tfg.cervecera.model.repositorys.SaleRepository;
+import tfg.cervecera.model.repositorys.StockRepository;
 
 @Service
 public class BeerService {
@@ -21,13 +24,21 @@ public class BeerService {
 	private final BeerRepository beerRepository;
 	private final FactoryRepository factoryRepository;
 	private final CompanyRepository companyRepository;
+	private final StockRepository stockRepository;
+	private final SaleRepository saleRepository;
 
-	public BeerService(BeerRepository beerRepository,
-	                   FactoryRepository factoryRepository,
-	                   CompanyRepository companyRepository) {
+	public BeerService(
+	        BeerRepository beerRepository,
+	        FactoryRepository factoryRepository,
+	        CompanyRepository companyRepository,
+	        StockRepository stockRepository, 
+	        SaleRepository saleRepository) {
+
 	    this.beerRepository = beerRepository;
 	    this.factoryRepository = factoryRepository;
 	    this.companyRepository = companyRepository;
+	    this.stockRepository = stockRepository;
+	    this.saleRepository = saleRepository;
 	}
 
 	public Beer createBeer(BeerRegisterDTO dto) {
@@ -105,8 +116,9 @@ public class BeerService {
                 .map(this::mapToDTO)
                 .toList();
     }
+    
 
-
+    @Transactional
     public void deleteBeer(Long id) {
 
         Long companyId = SecurityUtils.getCurrentCompanyId();
@@ -117,6 +129,10 @@ public class BeerService {
         if (!beer.getCompany().getId().equals(companyId)) {
             throw new SecurityException("No tienes permiso para eliminar esta cerveza");
         }
+
+        saleRepository.deleteByBeerId(id);
+
+        stockRepository.deleteByBeerId(id);
 
         beerRepository.delete(beer);
     }

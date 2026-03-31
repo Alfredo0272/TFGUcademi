@@ -72,4 +72,13 @@ public class GlobalExceptionHandler {
                         "message", ex.getMessage()
                 ));
     }
+    
+    @ExceptionHandler(StockExistsException.class)
+    public ResponseEntity<ApiError> handleStockExistsException(
+            StockExistsException ex) {
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(new ApiError(ex.getMessage(), 409));
+    }
 }

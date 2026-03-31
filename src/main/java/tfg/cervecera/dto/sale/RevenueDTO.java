@@ -12,6 +12,8 @@ public class RevenueDTO {
     private BigDecimal revenue;
     private Integer year;
     private Integer month;
+    
+    public RevenueDTO() {}
 
 
     public RevenueDTO(Long id, String name, BigDecimal revenue) {

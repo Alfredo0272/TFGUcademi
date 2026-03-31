@@ -27,8 +27,8 @@ public class RevenueController {
     }
 
     @GetMapping("/by-beer")
-    public List<RevenueDTO> getRevenueByBeer() {
-        return revenueService.getRevenueByBeer();
+    public ResponseEntity<List<RevenueDTO>> getRevenueByBeer() {
+        return ResponseEntity.ok(revenueService.getRevenueByBeer());
     }
 
     @GetMapping("/by-factory")
@@ -41,12 +41,19 @@ public class RevenueController {
         return revenueService.getMonthlyRevenue();
     }
     
-    @GetMapping("/factoryMonthly/{factoryId}")
-    public List<RevenueDTO> getMonthlyRevenueByFactory(@PathVariable Long factoryId) {
-		return revenueService.getMonthlyProfitFactory(factoryId);
-    }
+    @GetMapping("/monthly/factory/{factoryId}")
+    public ResponseEntity<List<RevenueDTO>> getMonthlyRevenueByFactory(
+            @PathVariable Long factoryId) {
 
-    @GetMapping("/between-dates")
+        if (factoryId == null) {
+            throw new IllegalArgumentException("Factory id cannot be null");
+        }
+
+        return ResponseEntity.ok(
+                revenueService.getMonthlyProfitFactory(factoryId)
+        );
+    }
+    @GetMapping("/range")
     public BigDecimal getRevenueBetweenDates(
             @RequestParam
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

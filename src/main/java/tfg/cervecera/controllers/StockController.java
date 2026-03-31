@@ -14,6 +14,7 @@ import jakarta.validation.Valid;
 import tfg.cervecera.aplication.stock.StockService;
 import tfg.cervecera.dto.stock.StockDTO;
 import tfg.cervecera.dto.stock.StockRegisterDTO;
+import tfg.cervecera.model.Stock;
 
 @RestController
 @RequestMapping("/api/stocks")
@@ -46,14 +47,21 @@ public class StockController {
 	}
 	
 	@PutMapping("/{id}/production")
-	public ResponseEntity<?> addProduction(
+	public ResponseEntity<StockDTO> addProduction(
 	        @PathVariable Long id,
 	        @RequestBody StockDTO dto) {
 
-	    stockService.addProduction(id, dto.getProductionVolumeL());
+	    Stock updatedStock = stockService.addProduction(id, dto.getProductionVolumeL());
 
-	    return ResponseEntity
-	    		.status(HttpStatus.ACCEPTED)
-	    		.body("Producción añadida correctamente");
+	    StockDTO response = new StockDTO();
+	    response.setId(updatedStock.getId());
+	    response.setBeerId(updatedStock.getBeer().getId());
+	    response.setFactoryId(updatedStock.getFactory().getId());
+	    response.setProductionCostL(updatedStock.getProductionCostL());
+	    response.setProductionVolumeL(updatedStock.getProductionVolumeL());
+	    response.setAvailableL(updatedStock.getAvailableL());
+	    response.setUpdatedAt(updatedStock.getUpdatedAt());
+
+	    return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
 	}
 }
